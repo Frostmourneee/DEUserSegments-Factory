@@ -16,14 +16,6 @@ services:
 
   data_generator:
     build: ./data_generator
-    container_name: data_generator
-    env_file: .env
-    volumes:
-      - ./config:/app/config
-    depends_on:
-      - postgres_db
-    networks:
-      - etl-network
 
   airflow:
     build: ./airflow
@@ -46,6 +38,7 @@ services:
     command: airflow standalone
     depends_on:
       - postgres_db
+      - data_generator
     networks:
       - etl-network
 
