@@ -17,6 +17,9 @@ services:
   data_generator:
     build: ./data_generator
 
+  data_quality_checker:
+    build: ./data_quality_checker
+
   airflow:
     build: ./airflow
     environment:
