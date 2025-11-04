@@ -1,5 +1,6 @@
 from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
+from airflow.operators.bash import BashOperator
 from datetime import datetime, timedelta
 
 default_args = {
@@ -9,13 +10,12 @@ default_args = {
 }
 
 with DAG(
-    'data_generation',
+    'e2e_etl_pipeline',
     default_args=default_args,
-    description="Запуск генератора данных",
+    description="Запуск всего пайплайна",
     start_date=datetime(2024, 1, 1),
-    schedule=timedelta(minutes=5),
+    schedule=timedelta(minutes=2),
     catchup=False,
-    tags=["data", "PostgreSQL"],
     is_paused_upon_creation=False,
 ) as dag:
 
@@ -36,3 +36,10 @@ with DAG(
         network_mode='user-segments-etl-pipeline_etl-network',
         mount_tmp_dir=False
     )
+
+    spark_etl_task = BashOperator(
+        task_id='run_spark_etl',
+        bash_command='docker exec spark /opt/spark/bin/spark-submit --master spark://spark:7077 /opt/spark/scripts/etl_script.py'
+    )
+
+    generate_data_task >> spark_etl_task
