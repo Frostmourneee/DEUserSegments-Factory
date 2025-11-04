@@ -62,7 +62,6 @@ services:
 
   spark-worker:
     image: apache/spark:3.5.0
-    build: ./spark
     container_name: spark-worker
     env_file: .env
     environment:
