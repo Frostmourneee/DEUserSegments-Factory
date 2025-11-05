@@ -78,5 +78,5 @@ volumes:
 
 networks:
   etl-network:
-    name: user-segments-etl-pipeline_etl-network
+    name: usersegments-factory-pipeline_etl-network
     driver: bridge

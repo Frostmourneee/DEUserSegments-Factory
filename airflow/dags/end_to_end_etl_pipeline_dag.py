@@ -21,7 +21,7 @@ with DAG(
 
     generate_data_task = DockerOperator(
         task_id='generate_test_data',
-        image='user-segments-etl-pipeline-data_generator:latest',
+        image='usersegments-factory-data_generator:latest',
         environment={
             'POSTGRES_DB': '{{ var.value.POSTGRES_DB }}',
             'POSTGRES_USER': '{{ var.value.POSTGRES_USER }}',
@@ -33,7 +33,7 @@ with DAG(
         auto_remove=True,
         command='python3 data_generator.py',
         docker_url='unix://var/run/docker.sock',
-        network_mode='user-segments-etl-pipeline_etl-network',
+        network_mode='usersegments-factory_etl-network',
         mount_tmp_dir=False
     )
 
@@ -44,7 +44,7 @@ with DAG(
 
     data_quality_check_task = DockerOperator(
         task_id='data_quality_check',
-        image='user-segments-etl-pipeline-data_quality_checker:latest',
+        image='usersegments-factory-data_quality_checker:latest',
         environment={
             'POSTGRES_DB': '{{ var.value.POSTGRES_DB }}',
             'POSTGRES_USER': '{{ var.value.POSTGRES_USER }}',
@@ -56,7 +56,7 @@ with DAG(
         auto_remove=True,
         command='python3 data_quality_check.py',
         docker_url='unix://var/run/docker.sock',
-        network_mode='user-segments-etl-pipeline_etl-network',
+        network_mode='usersegments-factory-pipeline_etl-network',
         mount_tmp_dir=False
     )
 
