@@ -56,7 +56,7 @@ with DAG(
         auto_remove=True,
         command='python3 data_quality_check.py',
         docker_url='unix://var/run/docker.sock',
-        network_mode='usersegments-factory-pipeline_etl-network',
+        network_mode='usersegments-factory_etl-network',
         mount_tmp_dir=False
     )
 
