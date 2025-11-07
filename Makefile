@@ -22,14 +22,12 @@ help: ##@Help Show this help
 env: ##@Environment Create .env file with variables
 	cat example.env > .env
 
-build: ##@Docker Build only images with no containers
+up: ##@Docker Start app
 	docker compose build data_generator data_quality_checker
-
-up: ##@Docker Start all containers
 	docker compose build postgres_db airflow spark
 	docker compose up -d postgres_db airflow spark spark-worker
 
-down: ##@Docker Stop all containers
+down: ##@Docker Stop app
 	docker compose down
 
 psql: ##@Database Connect to PostgreSQL database via psql util
