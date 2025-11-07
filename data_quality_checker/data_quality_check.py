@@ -4,8 +4,25 @@ from datetime import datetime
 import psycopg2
 
 
-def check_data_quality():
-    """Проверка качества данных после ETL"""
+def check_data_quality() -> None:
+    """
+    Проверка качества данных после ETL процесса.
+
+    Функция выполняет комплексную проверку качества данных в PostgreSQL базе,
+    включая следующие аспекты:
+    - Полнота данных (наличие записей во всех таблицах)
+    - Актуальность данных (свежесть расчетных дат)
+    - Целостность данных (отсутствие orphan записей и NULL значений)
+
+    Проверяются как исходные таблицы (users, orders, user_activity),
+    так и результирующие витрины (analytics.user_segments, analytics.marketing_mart).
+
+    Raises:
+        ValueError: Если какая-либо из проверок качества данных не пройдена
+
+    Returns:
+        None
+    """
     db_config = {
         "dbname": os.getenv("POSTGRES_DB"),
         "user": os.getenv("POSTGRES_USER"),
@@ -58,7 +75,7 @@ def check_data_quality():
         cursor.execute(
             """
             SELECT COUNT(*) as invalid_records
-            FROM analytics.user_segments 
+            FROM analytics.user_segments
             WHERE user_id NOT IN (SELECT user_id FROM users)
         """
         )
@@ -71,7 +88,7 @@ def check_data_quality():
         cursor.execute(
             """
             SELECT COUNT(*) as null_records
-            FROM analytics.marketing_mart 
+            FROM analytics.marketing_mart
             WHERE user_id IS NULL OR segment_name IS NULL
         """
         )

@@ -1,21 +1,29 @@
 from config import get_db_config
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import (
-    avg,
-    coalesce,
-    col,
-    count,
-    current_date,
-    datediff,
-    lit,
-    max,
-    sum,
-    to_date,
-    when,
-)
+from pyspark.sql.functions import (avg, coalesce, col, count, current_date,
+                                   datediff, lit, max, sum, to_date, when)
 
 
-def main():
+def main() -> None:
+    """
+    Основная функция ETL процесса для сегментации пользователей.
+
+    Функция выполняет полный ETL процесс:
+    1. Выполняет агрегацию и преобразование данных
+    2. Создает сегменты пользователей на основе бизнес-правил
+    3. Сохраняет результаты в витрины analytics.user_segments и analytics.marketing_mart
+
+    Бизнес-правила сегментации:
+    - vip: 10+ заказов
+    - loyal: 5+ заказов и сумма >= 500
+    - active: 3+ заказов
+    - new: регистрация в последние 30 дней
+    - churned: последний заказ более 90 дней назад
+    - regular: все остальные пользователи
+
+    Returns:
+        None
+    """
     spark = (
         SparkSession.builder.appName("UserSegmentsETL")
         .config("spark.jars", "/opt/spark/jars/postgresql-42.6.0.jar")

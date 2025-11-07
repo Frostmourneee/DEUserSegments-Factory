@@ -18,7 +18,24 @@ from airflow.sdk import dag
     tags=["etl", "pipeline"],
     is_paused_upon_creation=False,
 )
-def e2e_etl_pipeline():
+def e2e_etl_pipeline() -> None:
+    """
+    End-to-End ETL Pipeline DAG.
+
+    Этот DAG реализует полный ETL пайплайн, состоящий из трех этапов:
+    1. Генерация тестовых данных
+    2. Обработка данных с помощью Apache Spark
+    3. Проверка качества данных
+
+    DAG запускается каждые 2 минуты и использует Docker контейнеры
+    для выполнения задач генерации данных и проверки качества.
+
+    Workflow:
+        generate_test_data → run_spark_etl → data_quality_check
+
+    Returns:
+        None: Функция создает и конфигурирует DAG объект
+    """
     docker_env = {
         "POSTGRES_DB": "{{ var.value.POSTGRES_DB }}",
         "POSTGRES_USER": "{{ var.value.POSTGRES_USER }}",

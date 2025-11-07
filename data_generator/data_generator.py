@@ -6,7 +6,20 @@ import psycopg2
 from faker import Faker
 
 
-def generate_data():
+def generate_data() -> None:
+    """
+    Генерирует тестовые данные и загружает их в PostgreSQL базу данных.
+
+    Функция создает случайные данные для трех таблиц:
+    - users: данные пользователей
+    - orders: данные заказов
+    - user_activity: данные активностей пользователей
+
+    Количество записей генерируется случайным образом в заданных диапазонах.
+
+    Returns:
+        None
+    """
     db_config = {
         "dbname": os.getenv("POSTGRES_DB"),
         "user": os.getenv("POSTGRES_USER"),
